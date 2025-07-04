@@ -1,0 +1,42 @@
+import cv2
+
+def variable_speed_video(video_path):
+    cap = cv2.VideoCapture(video_path)
+    
+    if not cap.isOpened():
+        print("Error opening video file")
+        return
+    
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    print(f"Original FPS: {fps}")
+    
+    cv2.namedWindow('Video Playback', cv2.WINDOW_NORMAL)
+    
+    speed = 1.0  # 1.0 = normal, <1.0 = slow, >1.0 = fast
+    frame_time = int(1000 / fps)  # ms per frame for normal speed
+    
+    while True:
+        start_time = time.time()
+        
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        cv2.imshow('Video Playback', frame)
+        
+        # Handle keyboard input
+        key = cv2.waitKey(int(frame_time / speed)) & 0xFF
+        if key == ord('q'):
+            break
+        elif key == ord('1'):  # Press 1 for normal speed
+            speed = 1.0
+        elif key == ord('2'):  # Press 2 for slow motion (0.5x)
+            speed = 0.5
+        elif key == ord('3'):  # Press 3 for fast motion (2x)
+            speed = 2.0
+    
+    cap.release()
+    cv2.destroyAllWindows()
+
+# Example usage
+variable_speed_video('your_video.mp4')
